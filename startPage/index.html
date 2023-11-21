@@ -3,65 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Startpage</title>
-    <style>
-        body {
-            font-family: 'Courier New', monospace;
-            background-color: #282a36;
-            color: #f8f8f2;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        #search-bar {
-            width: 80%;
-            max-width: 500px;
-            padding: 10px;
-            font-size: 1.2em;
-            margin-bottom: 20px;
-            background-color: #44475a;
-            border: 1px solid #6272a4; /* Added border to create a terminal-like appearance */
-            color: #f8f8f2;
-            border-radius: 15px;
-        }
-
-        #info-container {
-            text-align: center;
-            background-color: #282a36;
-            padding: 20px;
-            position: relative;
-        }
-
-        h1, p {
-            margin: 0;
-        }
-
-        h1 {
-            color: #50fa7b;
-            font-size: 1.5em;
-            margin-bottom: 10px;
-        }
-
-        p {
-            color: #f8f8f2;
-            font-size: 1em;
-        }
-        img{
-            border-radius: 15px;
-            width: 150px;
-        }
-        .socialIcons{
-            width: 40px;
-            height: 40px;
-        }
-    </style>
+    <title>Hello World!</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <img src="https://media.discordapp.net/attachments/1128434260383113350/1175520019401162843/animeHacker.png?ex=656b8754&is=65591254&hm=1cf450691f213c6bdaeefdfbd6dd4217b561891dcf7d33eba7d301ef2e2a096f&=&width=733&height=733">
@@ -77,62 +20,8 @@
     <a href="https://reddit.com" target="_blank"><img src="Icons/redditIcon.png" alt="" class="socialIcons"></a>
     <a href="https://www.github.com" target="_blank"><img src="Icons/githubIcon.png" alt="" class="socialIcons"></a>
   </div>
-    <input type="text" id="search-bar" placeholder="Search the web..." onkeydown="if(event.keyCode==13) location.href='https://www.startpage.com/do/dsearch?query=' + this.value">
-    <script>
-          function updateClock() {
-            const now = new Date();
-            const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const date = now.toDateString();
+    <input type="text" id="search-bar" placeholder="Search the web..." onkeydown="if(event.keyCode==13) location.href='https://www.startpage.com/do/dsearch?query=' + this.value" target="_blank">
 
-            document.getElementById('time').textContent = `Current time: ${time}`;
-            document.getElementById('date').textContent = `Today's date: ${date}`;
-        }
-
-        function getDailyQuote() {
-            // Linux and programming-related quotes
-            const quotes = [
-                "The Linux philosophy is 'Laugh in the face of danger'. Oops. Wrong one. 'Do it yourself'. Yes, that's it. - Linus Torvalds",
-                "Programming is not about typing, it's about thinking. - Rich Hickey",
-                "If you're not embarrassed by the first version of your product, you've launched too late. - Reid Hoffman",
-                "Talk is cheap. Show me the code. - Linus Torvalds",
-                "There are only two hard things in computer science: cache invalidation and naming things. - Phil Karlton",
-                "It's not a bug, it's a feature. - Anonymous",
-                "The best thing about a boolean is even if you are wrong, you are only off by a bit. - Anonymous",
-                "Intelligence is the ability to avoid doing work, yet getting the work done. - Linus Torvalds",
-                "All operating systems sucks, but Linux just sucks less - Linus Torvalds"
-                // Add more quotes as needed
-            ];
-
-            const randomIndex = Math.floor(Math.random() * quotes.length);
-            const quote = quotes[randomIndex];
-
-            document.getElementById('quote').textContent = `Daily Quote: ${quote}`;
-        }
-
-        function getWeather() {
-            // Replace 'YOUR_API_KEY' with your OpenWeatherMap API key
-            const apiKey = '535523f18143e1364964c6afec562eb0';
-            const city = 'Porsgrunn';
-            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=Porsgrunn&appid=535523f18143e1364964c6afec562eb0&units=metric
-`;
-
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    const temperature = data.main.temp;
-                    const description = data.weather[0].description;
-
-                    document.getElementById('weather').textContent = `Weather in ${city}: ${temperature}°C, ${description}`;
-                })
-                .catch(error => console.error('Error fetching weather:', error));
-        }
-
-        updateClock();
-        getDailyQuote();
-        getWeather();
-        setInterval(updateClock, 1000); // Update time every second
-        setInterval(getDailyQuote, 86400000); // Update quote every 24 hours
-        setInterval(getWeather, 600000); // Update weather every 10 minutes
-    </script>
+<script src="script.js"></script>
 </body>
 </html>
