@@ -1,0 +1,58 @@
+
+body {
+    font-family: 'Courier New', monospace;
+    background-color: #282a36;
+    color: #f8f8f2;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+#search-bar {
+    width: 80%;
+    max-width: 500px;
+    padding: 10px;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    background-color: #44475a;
+    border: 1px solid #6272a4; /* Added border to create a terminal-like appearance */
+    color: #f8f8f2;
+    border-radius: 15px;
+}
+
+#info-container {
+    text-align: center;
+    background-color: #282a36;
+    padding: 20px;
+    position: relative;
+}
+
+h1, p {
+    margin: 0;
+}
+
+h1 {
+    color: #50fa7b;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #f8f8f2;
+    font-size: 1em;
+}
+img{
+    border-radius: 15px;
+            width: 150px;
+}
+.socialIcons{
+    width: 40px;
+    height: 40px;
+}
+ 
