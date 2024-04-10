@@ -19,10 +19,7 @@ a:hover{
 
 p{
 	color: white;
-	margin: auto;
-	width: 50%;
-	padding: 10px;
-	text-align: left;
+	text-align: center;
 }
 h1, h2, h3{
 	text-align: center;
@@ -54,15 +51,5 @@ nav a:hover{
 	border-radius: 20px;
 	padding: 5px;
 	color: var(--headers);
-}
-.hardSpecs, .aligncenter, div{
-	color: white;
-	text-align: center;
-}
-.socialIcons{
-    width: 40px;
-    height: 40px;
-	padding-left: 5px;
-	padding-right: 5px;
 }
 
