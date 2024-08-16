@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meme Terminal</title>
+    <style>
+        body {
+            background-color: #282a36;
+            color: #f8f8f2;
+            font-family: 'Fira Code', monospace;
+            font-size: 16px;
+            padding: 20px;
+            margin: 0;
+        }
+        #terminal {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #6272a4;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(98, 114, 164, 0.5);
+        }
+        #input {
+            width: 100%;
+            background-color: #44475a;
+            color: #f8f8f2;
+            border: none;
+            outline: none;
+            font-family: 'Fira Code', monospace;
+            font-size: 16px;
+            padding: 5px;
+            margin-top: 10px;
+            border-radius: 3px;
+        }
+        #matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #282a36;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="terminal"></div>
+    <input type="text" id="input" autofocus>
+    <canvas id="matrix"></canvas>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+        const input = document.getElementById('input');
+        const matrix = document.getElementById('matrix');
+
+        const commands = {
+            help: 'List all available commands',
+            clear: 'Clear the terminal screen',
+            arch: 'Learn why Arch Linux makes you superior',
+            doge: 'Much wow, very command',
+            rickroll: 'Open the "Never Gonna Give You Up" video',
+            cat: 'Display the contents of a file',
+            pi: 'Display the first 50 digits of pi',
+            matrix: 'Display the Matrix effect (Press CTRL+C to stop)',
+            sigma: 'Watch a Sigma edit video',
+            quote: 'Get a random Linux or programming quote',
+            mockelon: 'Mock Elon Musk',
+            ls: 'List directory contents',
+            mkdir: 'Make directories',
+            cd: 'Change the current directory',
+            pic: 'Open a photo in another tab'
+        };
+
+        let commandHistory = [];
+        let historyIndex = -1;
+        let currentDirectory = '/home/user';
+
+        const fileSystem = {
+            '/': {
+                'home': {
+                    'user': {
+                        'Documents': {
+                            'top_secret_plans.txt': 'World domination plans (step 1: learn to code)',
+                            'diary.md': 'Dear diary, today I learned what a pointer is. I immediately forgot.'
+                        },
+                        'Downloads': {
+                            'definitely_not_a_virus.exe': 'Just kidding, it\'s a text file!',
+                            'cat_memes.zip': 'A collection of the finest feline humor'
+                        },
+                        'Pictures': {
+                            'my_selfie.jpg': 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2F736x%2F57%2Fde%2Fce%2F57dece275ac9d0244f7d9f5fb9f64e62.jpg&f=1&nofb=1&ipt=070a7075704fc17547c707e7f9152d1fbb81e243145abc480b4ba64e21a6faaf&ipo=images',
+                            'food_pics.png': 'https://example.com/food_pics.png'
+                        },
+                        'Music': {
+                            'never_gonna_give_you_up.mp3': 'You know the rules, and so do I',
+                            'darude_sandstorm.flac': 'Dududududu'
+                        },
+                        'Videos': {
+                            'cat_fails_compilation.mp4': '10 hours of cats being cats',
+                            'how_to_exit_vim.webm': 'A 3-day course on exiting Vim'
+                        },
+                        'Desktop': {
+                            'homework.txt': 'TODO: Start homework',
+                            'memes': {
+                                'programming_memes.jpg': 'https://example.com/programming_memes.jpg',
+                                'linux_memes.png': 'https://example.com/linux_memes.png'
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        function printToTerminal(text) {
+            terminal.innerHTML += `<div>${text}</div>`;
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function processCommand(cmd) {
+            const [command, ...args] = cmd.split(' ');
+            switch(command.toLowerCase()) {
+                case 'help':
+                    for (let [command, description] of Object.entries(commands)) {
+                        printToTerminal(`<span style="color: #ff79c6;">${command}</span>: ${description}`);
+                    }
+                    break;
+                case 'clear':
+                    terminal.innerHTML = '';
+                    break;
+                case 'arch':
+                    printToTerminal('I use Arch btw. That makes me intellectually superior to all other OS users.');
+                    break;
+                case 'doge':
+                    printToTerminal('Much command. Very execute. Wow.');
+                    break;
+                case 'rickroll':
+                    window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank');
+                    printToTerminal('Opening "Never Gonna Give You Up" video...');
+                    break;
+                case 'cat':
+                    if (args.length === 0) {
+                        printToTerminal('Usage: cat <filename>');
+                    } else {
+                        const filename = args[0];
+                        const file = getFile(filename);
+                        if (file) {
+                            printToTerminal(`Contents of ${filename}:`);
+                            printToTerminal(file);
+                        } else {
+                            printToTerminal(`cat: ${filename}: No such file or directory`);
+                        }
+                    }
+                    break;
+                case 'pi':
+                    printToTerminal('The first 50 digits of pi are: 3.14159265358979323846264338327950288419716939937510');
+                    break;
+                case 'matrix':
+                    startMatrixEffect();
+                    break;
+                case 'sigma':
+                    window.open('https://www.youtube.com/watch?v=Ux5cQbO_ybw', '_blank');
+                    printToTerminal('Opening Sigma edit video...');
+                    break;
+                case 'quote':
+                    const quotes = [
+                        "Talk is cheap. Show me the code. - Linus Torvalds",
+                        "The best way to predict the future is to invent it. - Alan Kay",
+                        "Programming isn't about what you know; it's about what you can figure out. - Chris Pine",
+                        "The only way to learn a new programming language is by writing programs in it. - Dennis Ritchie",
+                        "Linux is only free if your time has no value. - Jamie Zawinski"
+                    ];
+                    printToTerminal(quotes[Math.floor(Math.random() * quotes.length)]);
+                    break;
+                case 'mockelon':
+                    const mockElonResponses = [
+                        "I'm going to buy Twitter! No, wait, I'm not. Yes, I am! Maybe?",
+                        "Just invented a new car feature: square wheels. Revolutionary!",
+                        "Breaking news: I'm changing my name to X Æ A-13. It's more relatable.",
+                        "Why go to Mars when we can dig a really deep hole instead?",
+                        "New Tesla update: cars now run on the power of memes and dogecoin."
+                    ];
+                    printToTerminal(mockElonResponses[Math.floor(Math.random() * mockElonResponses.length)]);
+                    break;
+                case 'ls':
+                    const path = args[0] || currentDirectory;
+                    const dir = getDirectory(path);
+                    if (dir) {
+                        printToTerminal(Object.keys(dir).join(' '));
+                    } else {
+                        printToTerminal(`ls: cannot access '${path}': No such file or directory`);
+                    }
+                    break;
+                case 'mkdir':
+                    if (args.length === 0) {
+                        printToTerminal('mkdir: missing operand');
+                    } else {
+                        const newDir = args[0];
+                        const parentDir = getDirectory(currentDirectory);
+                        if (parentDir) {
+                            parentDir[newDir] = {};
+                            printToTerminal(`Directory '${newDir}' created`);
+                        } else {
+                            printToTerminal(`mkdir: cannot create directory '${newDir}': No such file or directory`);
+                        }
+                    }
+                    break;
+                case 'cd':
+                    if (args.length === 0) {
+                        currentDirectory = '/home/user';
+                    } else {
+                        const newPath = args[0];
+                        const newDir = getDirectory(resolvePath(newPath));
+                        if (newDir) {
+                            currentDirectory = resolvePath(newPath);
+                        } else {
+                            printToTerminal(`cd: ${newPath}: No such file or directory`);
+                        }
+                    }
+                    break;
+                case 'pic':
+                    if (args.length === 0) {
+                        printToTerminal('Usage: pic <filename>');
+                    } else {
+                        const filename = args[0];
+                        const file = getFile(filename);
+                        if (file && (filename.endsWith('.jpg') || filename.endsWith('.png'))) {
+                            window.open(file, '_blank');
+                            printToTerminal(`Opening ${filename} in a new tab...`);
+                        } else {
+                            printToTerminal(`pic: ${filename}: No such image file or directory`);
+                        }
+                    }
+                    break;
+                default:
+                    printToTerminal(`Command not found: ${command}. Type 'help' for available commands.`);
+            }
+        }
+
+        function getDirectory(path) {
+            const parts = path.split('/').filter(p => p);
+            let current = fileSystem['/'];
+            for (const part of parts) {
+                if (part === '..') {
+                    current = current.parent;
+                } else if (current[part]) {
+                    current = current[part];
+                } else {
+                    return null;
+                }
+            }
+            return current;
+        }
+
+        function getFile(filename) {
+            const dir = getDirectory(currentDirectory);
+            return dir && dir[filename];
+        }
+
+        function resolvePath(path) {
+            if (path.startsWith('/')) {
+                return path;
+            }
+            const currentParts = currentDirectory.split('/').filter(p => p);
+            const newParts = path.split('/').filter(p => p);
+            for (const part of newParts) {
+                if (part === '..') {
+                    currentParts.pop();
+                } else if (part !== '.') {
+                    currentParts.push(part);
+                }
+            }
+            return '/' + currentParts.join('/');
+        }
+
+        input.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                const cmd = input.value;
+                if (cmd.trim() !== '') {
+                    commandHistory.unshift(cmd);
+                    historyIndex = -1;
+                    printToTerminal(`<span style="color: #50fa7b;">➜</span> <span style="color: #8be9fd;">${currentDirectory}</span> $ ${cmd}`);
+                    processCommand(cmd);
+                    input.value = '';
+                }
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                if (historyIndex < commandHistory.length - 1) {
+                    historyIndex++;
+                    input.value = commandHistory[historyIndex];
+                }
+            } else if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                if (historyIndex > -1) {
+                    historyIndex--;
+                    input.value = historyIndex === -1 ? '' : commandHistory[historyIndex];
+                }
+            }
+        });
+
+        printToTerminal('<span style="color: #ff79c6;">Welcome to the Meme Terminal!</span> Type "help" for available commands.');
+
+        // Matrix effect
+        const ctx = matrix.getContext('2d');
+        let matrixInterval;
+
+        function startMatrixEffect() {
+            matrix.style.display = 'block';
+            matrix.width = window.innerWidth;
+            matrix.height = window.innerHeight;
+
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()_+-=[]{}|;:,.<>?';
+            const fontSize = 10;
+            const columns = matrix.width / fontSize;
+
+            const drops = [];
+            for (let i = 0; i < columns; i++) {
+                drops[i] = 1;
+            }
+
+            function drawMatrix() {
+                ctx.fillStyle = 'rgba(40, 42, 54, 0.05)';
+                ctx.fillRect(0, 0, matrix.width, matrix.height);
+
+                ctx.fillStyle = '#50fa7b';
+                ctx.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < drops.length; i++) {
+                    const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                    if (drops[i] * fontSize > matrix.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+
+                    drops[i]++;
+                }
+            }
+
+            matrixInterval = setInterval(drawMatrix, 33);
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.key === 'c') {
+                if (matrix.style.display === 'block') {
+                    clearInterval(matrixInterval);
+                    matrix.style.display = 'none';
+                    printToTerminal('Matrix effect stopped.');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
